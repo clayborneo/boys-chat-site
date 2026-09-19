@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Boys · the group chat, audited</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐚</text></svg>">
+<link rel="preload" href="fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* fonts are self-hosted (site/fonts): a private page should not phone anyone before it unlocks */
+@font-face{font-family:"Fraunces";font-style:normal;font-weight:400 900;font-display:swap;src:url(fonts/fraunces.woff2) format("woff2")}
+@font-face{font-family:"Fraunces";font-style:italic;font-weight:400 900;font-display:swap;src:url(fonts/fraunces-italic.woff2) format("woff2")}
+@font-face{font-family:"Special Elite";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/special-elite.woff2) format("woff2")}
+/* The look: a case file on an evidence wall. The wall is the chat's own media (decrypted after unlock);
+   the hero is a manila folder; every section is a sheet of paper taped over the wall. Text only ever
+   sits on paper, never on the wall, so the collage can be as loud as it likes. */
+:root{
+  color-scheme:light;
+  --paper:#f6eedc; --surface:#fdf9ee; --ink:#1a1410; --ink2:#594e42; --muted:#716555;
+  --grid:#e6dcc5; --axis:#c8bb9f; --ring:rgba(40,28,14,.14); --wash:rgba(40,28,14,.05);
+  --shade:linear-gradient(rgba(30,20,12,.40),rgba(30,20,12,.58)); --night:#17110d;
+  --clay:#2a78d6; --mat:#eb6834; --sam:#1baf7a; --john:#eda100;
+  --seq0:#eef3fa; --seq1:#cde2fb; --seq2:#9ec5f4; --seq3:#6da7ec; --seq4:#3987e5; --seq5:#256abf; --seq6:#184f95; --seq7:#0d366b;
+  --div-lo:#e34948; --div-lo2:#f0a3a2; --div-mid:#efe9d9; --div-hi2:#9ec5f4; --div-hi:#2a78d6;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b; --accent:#a3271d;
+  --manila:#e8cd96; --manila2:#dcbd7f; --folderink:#21170d; --stamp:#b3261a; --tape:rgba(236,222,170,.82);
+  --serif:"Fraunces","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --type:"Special Elite","Courier Prime","Courier New",Courier,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --tile:1500px;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --paper:#1e1915; --surface:#28221d; --ink:#f6eee0; --ink2:#cdbfaa; --muted:#94887a;
+  --grid:#383029; --axis:#4d4338; --ring:rgba(255,240,220,.12); --wash:rgba(255,240,220,.06);
+  --shade:linear-gradient(rgba(12,8,5,.62),rgba(12,8,5,.78));
+  --clay:#3987e5; --mat:#d95926; --sam:#199e70; --john:#c98500;
+  --seq0:#232930; --seq1:#0d366b; --seq2:#184f95; --seq3:#256abf; --seq4:#3987e5; --seq5:#6da7ec; --seq6:#9ec5f4; --seq7:#cde2fb;
+  --div-lo:#e66767; --div-lo2:#8a3c3c; --div-mid:#3b342d; --div-hi2:#1c5cab; --div-hi:#3987e5; --accent:#ee8a76;
+  --manila:#d9bd85; --manila2:#c9a96b;
+}}
+@media (max-width:700px){:root{--tile:1050px}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;background:var(--night)}
+body{margin:0;color:var(--ink);font:16px/1.55 var(--sans);-webkit-text-size-adjust:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.12;margin:0;text-wrap:balance}
+h2{font-size:clamp(30px,4.6vw,46px);margin-bottom:10px;font-variation-settings:"SOFT" 60,"WONK" 1;letter-spacing:-.015em}
+h3{font-size:21px;font-variation-settings:"SOFT" 40}
+p{margin:0 0 12px} .lede{font:italic 19px/1.5 var(--serif);color:var(--ink2);max-width:62ch}
+.kicker{font:13px/1.2 var(--type);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.sub{color:var(--ink2);max-width:68ch;margin-bottom:24px}
+a{color:inherit}
+
+/* the wall */
+#wall{position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;z-index:-2;background:#3a2a1d var(--wall-img,none) 0 0/var(--tile) var(--tile) repeat;opacity:0;transition:opacity 1.2s ease}
+@media (min-width:701px) and (hover:hover) and (prefers-reduced-motion:no-preference){#wall{height:calc(100vh + var(--tile));height:calc(100lvh + var(--tile));will-change:transform}}
+#wall.up{opacity:1}
+#shade{position:fixed;inset:0;z-index:-1;background:var(--shade);pointer-events:none}
+#shade::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,transparent 40%,rgba(0,0,0,.42) 100%)}
+
+/* sheets of paper */
+section{position:relative;margin:56px 0;padding:46px 40px 34px;background:var(--grain),var(--paper);border-radius:3px;box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 18px 44px -12px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.35)}
+section::before,.folder::after{content:"";position:absolute;top:-13px;left:50%;width:128px;height:28px;margin-left:-64px;background:var(--tape);transform:rotate(-1.6deg);box-shadow:0 1px 2px rgba(0,0,0,.25);clip-path:polygon(0 8%,3% 0,6% 9%,9% 0,12% 8%,100% 0,100% 92%,97% 100%,94% 91%,91% 100%,88% 92%,0 100%)}
+section:nth-of-type(even)::before{left:16%;transform:rotate(2.2deg)} section:nth-of-type(3n)::before{left:82%;transform:rotate(-3deg)}
+
+/* lock: the wall stays covered until the password lands */
+#lock{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--grain),radial-gradient(ellipse at 50% 30%,#4a3524,#1b130d 75%);overflow:hidden;position:relative}
+#lock .blank{position:absolute;background:#2b2019;border:7px solid #3a2c21;border-bottom-width:20px;box-shadow:0 8px 20px rgba(0,0,0,.5);opacity:.75}
+#lock form{position:relative;width:min(400px,100%);text-align:center;background:var(--grain),linear-gradient(var(--manila),var(--manila2));color:var(--folderink);padding:34px 28px 26px;border-radius:3px 14px 3px 3px;box-shadow:0 24px 60px rgba(0,0,0,.6);transform:rotate(-1deg)}
+#lock .shell{font-size:40px} #lock h1{font-size:72px;font-weight:900;font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;margin:0 0 2px;letter-spacing:-.03em}
+#lock .lede{color:#5c4a2e;margin:0 auto;font-size:17px}
+#lock input{width:100%;padding:13px 14px;margin:18px 0 10px;border:1px solid #a88f5c;border-radius:3px;background:#fbf3df;color:var(--folderink);font:16px var(--type)}
+#lock button{width:100%;padding:13px;border:0;border-radius:3px;background:var(--folderink);color:#f6e6bf;font:15px var(--type);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+#lockerr{color:#8e1d13;min-height:1.5em;font:14px var(--type);margin-top:10px}
+
+/* nav: the tabs on the file drawer */
+nav{position:sticky;top:env(safe-area-inset-top,0);z-index:20;background:rgba(23,17,13,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,240,220,.12)}
+nav .wrap{display:flex;gap:2px;overflow-x:auto;padding-block:8px;scrollbar-width:none} nav .wrap::-webkit-scrollbar{display:none}
+nav a{flex:none;text-decoration:none;font:13px var(--type);letter-spacing:.03em;color:#d9cbb2;padding:7px 11px 5px;border-radius:3px} nav a:hover{background:rgba(255,240,220,.12);color:#fff}
+
+/* hero: the folder */
+header.hero{padding:64px 0 8px}
+.folder{position:relative;max-width:800px;background:var(--grain),linear-gradient(var(--manila),var(--manila2));color:var(--folderink);padding:44px 44px 38px;border-radius:3px 18px 3px 3px;box-shadow:0 30px 70px -10px rgba(0,0,0,.7),0 2px 6px rgba(0,0,0,.4);transform:rotate(-.7deg)}
+.folder::before{content:attr(data-tab);position:absolute;left:0;bottom:100%;background:var(--manila);color:var(--folderink);font:13px var(--type);letter-spacing:.08em;text-transform:uppercase;padding:9px 22px 5px;border-radius:10px 10px 0 0}
+.folder::after{left:auto;right:9%;top:-14px;transform:rotate(4deg)}
+.folder .typed{font:13.5px/1.7 var(--type);color:#4f3e22;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px dashed rgba(60,40,10,.4);padding-bottom:12px;margin-bottom:6px}
+.folder h1{font-size:clamp(84px,17vw,190px);font-weight:900;font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.045em;line-height:1;margin:4px 0 26px -6px;padding-bottom:.08em}
+.folder .lede{color:#3d2f1b;font-size:20px;max-width:58ch}
+.titlerow{position:relative} .stamp{position:absolute;right:4%;top:50%;margin-top:-44px;font:700 27px/1 var(--type);letter-spacing:.14em;text-transform:uppercase;color:var(--stamp);border:4px double var(--stamp);border-radius:6px;padding:10px 14px 6px;transform:rotate(9deg);opacity:.78;mix-blend-mode:multiply;text-align:center}
+.stamp small{display:block;font-size:10.5px;letter-spacing:.2em;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:40px}
+.tile{position:relative;background:var(--grain),repeating-linear-gradient(transparent 0 25px,rgba(70,110,170,.16) 25px 26px),var(--surface);border-top:3px solid rgba(179,38,26,.55);border-radius:2px;padding:16px 18px;box-shadow:0 12px 26px -8px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.35)}
+.tile:nth-child(odd){transform:rotate(-.9deg)} .tile:nth-child(even){transform:rotate(.7deg)} .tile:nth-child(3n){transform:rotate(1.3deg)}
+.tile .v{font:700 34px/1.1 var(--serif);letter-spacing:-.02em;font-variation-settings:"SOFT" 50} .tile .l{font-size:13px;color:var(--ink2);margin-top:4px}
+.hero .v.big{font-size:clamp(52px,8vw,78px);font-weight:900} .tile.wide{grid-column:span 2} @media (max-width:420px){.tile.wide{grid-column:auto}} @media (min-width:980px){.kpis{grid-template-columns:1.9fr repeat(5,1fr)} .tile.wide{grid-column:auto}}
+
+/* cards */
+.grid{display:grid;gap:16px} .g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))} .g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr))}
+.card{background:var(--surface);border:1px solid var(--ring);border-radius:5px;padding:20px;min-width:0;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 14px -10px rgba(40,28,14,.35)}
+.card h3{margin-bottom:2px} .card .note{font-size:13.5px;color:var(--ink2);margin-bottom:14px}
+.card .foot{font-size:13px;color:var(--ink2);margin-top:12px}
+.cardhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.tbtn{flex:none;font:12px var(--type);color:var(--ink2);background:none;border:1px solid var(--axis);border-radius:3px;padding:5px 10px 3px;cursor:pointer} .tbtn:hover{background:var(--wash)}
+.scroll{overflow-x:auto}
+svg{display:block;max-width:100%;height:auto;overflow:visible} svg text{font-family:var(--sans);fill:var(--ink2);font-size:11px}
+svg .strong{fill:var(--ink);font-weight:600} svg .mut{fill:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink2);margin:0 0 10px}
+.legend i,.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+table.data{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums} table.data th,table.data td{padding:5px 8px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap} table.data th:first-child,table.data td:first-child{text-align:left} table.data th{color:var(--ink2);font-weight:600}
+.tablewrap{max-height:320px;overflow:auto;margin-top:8px}
+.mark{cursor:default;outline:none} .mark:focus-visible{stroke:var(--ink);stroke-width:2}
+#tip{position:fixed;z-index:50;pointer-events:none;background:#17110d;color:#f6eee0;font-size:12.5px;line-height:1.4;padding:7px 10px;border-radius:4px;max-width:260px;box-shadow:0 6px 20px rgba(0,0,0,.4)} #tip b{font-weight:650}
+
+/* cast */
+.person{border-top:5px solid var(--c)} .person h3{font-size:30px;font-weight:800;font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1}
+.person .arch{font:13px/1.5 var(--type);color:var(--ink2);margin:4px 0 12px;text-transform:uppercase;letter-spacing:.04em}
+.person .big{font:800 32px var(--serif);letter-spacing:-.02em} .person .big small{font:400 13px var(--sans);color:var(--ink2);letter-spacing:0}
+.facts{list-style:none;padding:0;margin:12px 0 0;font-size:13.5px} .facts li{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px dotted var(--axis)} .facts li span:last-child{font-weight:600;text-align:right}
+.words{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px} .words span{font:12.5px var(--type);padding:4px 8px 2px;border-radius:2px;background:var(--wash);color:var(--ink2)}
+blockquote{margin:14px 0 0;padding:0 0 0 14px;border-left:3px solid var(--c,var(--axis));font:italic 16.5px/1.45 var(--serif);font-variation-settings:"SOFT" 100} blockquote footer{font:12.5px var(--sans);font-style:normal;color:var(--muted);margin-top:5px}
+.who{display:inline-flex;align-items:center;font-weight:600;font-size:13px}
+
+/* matrix */
+table.mx{border-collapse:separate;border-spacing:2px;font-size:13px;margin:0 auto} table.mx th{font-weight:600;color:var(--ink2);padding:4px 8px;font-size:12.5px} table.mx td{width:72px;height:46px;text-align:center;border-radius:4px;font-weight:600;font-variant-numeric:tabular-nums} table.mx td.self{background:repeating-linear-gradient(45deg,transparent 0 5px,var(--wash) 5px 6px);color:var(--muted);font-weight:400}
+table.mx th.row{text-align:right}
+
+/* relationships */
+.pair h3{font-size:24px} .pair h3 span{font:13px var(--type);color:var(--accent);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px}
+.pairbar{display:flex;gap:2px;height:6px;border-radius:99px;overflow:hidden;margin:10px 0 14px} .pairbar i{display:block}
+.pairnums{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink2);margin-bottom:12px} .pairnums b{color:var(--ink)}
+.prose p{max-width:70ch;font-size:16.5px}
+.prose p:first-child::first-letter{font:900 3.3em/.8 var(--serif);float:left;padding:6px 8px 0 0;color:var(--accent)}
+
+/* predictions */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px} .chip{font:13px var(--type);padding:8px 12px 5px;border-radius:3px;border:1px solid var(--axis);background:none;color:var(--ink2);cursor:pointer} .chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pred{display:grid;gap:8px;align-content:start} .pred .top{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;font-size:12.5px;color:var(--ink2)}
+.grade{display:inline-flex;align-items:center;gap:5px;font:12px var(--type);text-transform:uppercase;letter-spacing:.05em;padding:5px 9px 2px;border-radius:3px;border:1.5px solid var(--g,var(--axis));color:var(--ink);transform:rotate(-1.5deg)} .grade i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-top:-3px}
+.pred .claim{font:600 19px/1.3 var(--serif)} .pred .verdict{font-size:14.5px;color:var(--ink2)} .pred .verdict b{color:var(--ink)}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px;margin-bottom:22px}
+.stack{display:flex;gap:2px;height:14px;margin:10px 0 8px} .stack i{display:block;border-radius:2px;min-width:3px}
+
+/* intake: the drop box */
+#dz{border:2px dashed var(--axis);border-radius:6px;padding:34px 20px;text-align:center;background:var(--surface);cursor:pointer;transition:background .15s,border-color .15s} #dz.over,#dz:hover{background:var(--wash);border-color:var(--accent)}
+#dz b{display:block;font:700 22px var(--serif);margin-bottom:4px} #dz span{font-size:13.5px;color:var(--ink2)}
+#dznote{width:100%;min-height:74px;margin:14px 0 0;padding:12px;border:1px solid var(--axis);border-radius:4px;background:var(--surface);color:var(--ink);font:15px/1.5 var(--sans);resize:vertical}
+#gamego{padding:12px 20px 9px;border:0;border-radius:3px;background:var(--ink);color:var(--paper);font:14px var(--type);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap} #gamego:disabled{opacity:.4;cursor:default}
+.gamecard{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:20px} .gamecard .note{margin-bottom:0}
+#gameframe{position:fixed;inset:0;z-index:1000;background:#1b1813;display:flex;flex-direction:column} #gameframe[hidden]{display:none}
+#gameframe .bar{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;font:13px var(--type);letter-spacing:.08em;text-transform:uppercase;color:#f1e9d6;background:#1b1813}
+#gameframe .bar button{border:1px solid #f1e9d6;border-radius:3px;background:none;color:#f1e9d6;font:inherit;letter-spacing:inherit;text-transform:inherit;padding:5px 12px 3px;cursor:pointer}
+#gameframe iframe{flex:1;width:100%;border:0;background:#f1e9d6}
+#dzgo{margin-top:12px;padding:12px 20px 9px;border:0;border-radius:3px;background:var(--ink);color:var(--paper);font:14px var(--type);letter-spacing:.08em;text-transform:uppercase;cursor:pointer} #dzgo:disabled{opacity:.4;cursor:default}
+#dzlist{list-style:none;padding:0;margin:14px 0 0;font-size:13.5px} #dzlist li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dotted var(--axis)} #dzlist li span:last-child{font:12.5px var(--type);color:var(--ink2);text-align:right} #dzlist li.ok span:last-child{color:var(--good)} #dzlist li.bad span:last-child{color:var(--crit)}
+
+/* misc lists */
+#hall .card blockquote{font-size:19px;border-left-width:4px}
+.award .t{font:700 20px/1.2 var(--serif);font-variation-settings:"SOFT" 80,"WONK" 1} .award .w{font-size:13px;margin:6px 0 8px}
+.tl{list-style:none;margin:0;padding:0;border-left:2px dashed var(--axis)} .tl li{position:relative;padding:0 0 18px 22px} .tl li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--paper)} .tl time{font:12.5px var(--type);color:var(--muted);display:block;letter-spacing:.04em}
+footer.end{padding:12px 0 8px;color:var(--ink2);font-size:13.5px} footer.end li{margin-bottom:6px}
+.colophon{text-align:center;font:12.5px var(--type);letter-spacing:.08em;text-transform:uppercase;color:#d9cbb2;padding:8px 0 80px;text-shadow:0 1px 3px #000}
+section{scroll-margin-top:58px}
+nav .wrap{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);padding-right:40px}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .tile.wide{grid-column:auto} .tile .v{font-size:28px} .hero .v.big{font-size:40px} .chip,.tbtn{min-height:38px} .folder .lede{line-height:1.45}
+.wrap{padding:0 10px} section{margin:36px 0;padding:36px 16px 22px} .card{padding:15px} table.mx td{width:58px;height:40px} header.hero{padding-top:48px} .folder{padding:26px 20px 24px} .folder .lede{font-size:17px} .stamp{right:0;margin-top:-30px;font-size:15px;padding:7px 9px 4px;border-width:3px} .stamp small{font-size:8.5px} .kpis{gap:12px;margin-top:30px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} #wall{transition:none}}
+</style>
+</head>
+<body>
+<div id="wall" aria-hidden="true"></div><div id="shade" aria-hidden="true"></div>
+<div id="lock">
+  <i class="blank" style="left:6%;top:9%;width:150px;height:190px;transform:rotate(-7deg)"></i><i class="blank" style="right:8%;top:14%;width:210px;height:160px;transform:rotate(5deg)"></i><i class="blank" style="left:12%;bottom:8%;width:200px;height:150px;transform:rotate(4deg)"></i><i class="blank" style="right:14%;bottom:12%;width:140px;height:180px;transform:rotate(-5deg)"></i><i class="blank" style="left:44%;top:-40px;width:170px;height:130px;transform:rotate(2deg)"></i>
+<form id="lockform">
+  <div class="shell">🐚</div><h1>Boys</h1>
+  <p class="lede">Four guys, three apps, seven years. The file is sealed. Members only.</p>
+  <input id="pw" type="password" aria-label="Password" placeholder="password" autocomplete="current-password" autofocus>
+  <button type="submit">Unlock</button><div id="lockerr" role="status" aria-live="polite"></div>
+</form></div>
+<div id="app" hidden></div>
+<div id="tip" hidden></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => Number(n).toLocaleString('en-US');
+const WHO = ['Clay','Mat','Sam','John'];
+const COL = {Clay:'var(--clay)',Mat:'var(--mat)',Sam:'var(--sam)',John:'var(--john)'};
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const niceDate = d => { const [y,m,dd] = d.slice(0,10).split('-'); return `${MONTHS[+m-1]} ${+dd}, ${y}`; };
+let D, SEAL = null;   // SEAL = {key, salt}: what the drop box encrypts with
+
+/* ---------- unlock (same scheme as the hub: PBKDF2 310k + AES-256-GCM) ---------- */
+async function unlock(pw) {
+  let res; try { res = await fetch('data.enc', {cache:'no-store'}); } catch (e) { throw new Error('net'); }
+  if (!res.ok) throw new Error('net');
+  const b = new Uint8Array(await res.arrayBuffer());
+  const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name:'PBKDF2', salt:b.slice(0,16), iterations:310000, hash:'SHA-256'}, km, {name:'AES-GCM', length:256}, false, ['decrypt', 'encrypt']);
+  let plain; try { plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:b.slice(16,28)}, key, b.slice(28)); } catch (e) { throw new Error('pw'); }
+  D = JSON.parse(new TextDecoder().decode(plain));
+  SEAL = {key, salt: b.slice(0, 16)};
+  try { render(); } catch (e) { console.error(e); throw new Error('render'); }
+  try { sessionStorage.setItem('boys.pw', pw); } catch (e) {}
+  $('#pw').value = ''; $('#lock').hidden = true; $('#app').hidden = false; scrollTo(0, 0);
+  hangWall(key);
+}
+/* the game ships sealed like everything else: game.enc = iv(12) | ciphertext, same key. It is one self-contained html file, opened from a blob in a frame. */
+let GAMEURL = null;
+async function openGame() {
+  const btn = $('#gamego'), msg = $('#gamemsg'); if (!SEAL || !btn) return;
+  try {
+    if (!GAMEURL) { btn.disabled = true; msg.textContent = 'Unsealing the tunnel…';
+      const r = await fetch('game.enc', {cache:'no-store'}); if (!r.ok) throw new Error('net'); const b = new Uint8Array(await r.arrayBuffer());
+      GAMEURL = URL.createObjectURL(new Blob([await crypto.subtle.decrypt({name:'AES-GCM', iv:b.slice(0,12)}, SEAL.key, b.slice(12))], {type:'text/html'})); }
+    let box = $('#gameframe');
+    if (!box) { box = document.createElement('div'); box.id = 'gameframe'; box.innerHTML = '<div class="bar"><span>Ratio of Ra</span><button type="button">Back to the file</button></div>'; document.body.appendChild(box);
+      box.querySelector('button').addEventListener('click', closeGame); }
+    const old = box.querySelector('iframe'); if (old) old.remove();
+    const f = document.createElement('iframe'); f.title = 'Ratio of Ra, the game'; f.src = GAMEURL; f.addEventListener('load', () => { try { f.contentWindow.focus(); } catch (e) {} }); box.appendChild(f);
+    box.hidden = false; document.documentElement.style.overflow = 'hidden'; msg.textContent = '';
+  } catch (e) { console.warn('game unavailable', e); msg.textContent = 'The game would not open. Check your connection and try again, or tell Clay.'; }
+  btn.disabled = false;
+}
+function closeGame() { const box = $('#gameframe'); if (!box) return; const f = box.querySelector('iframe'); if (f) f.remove(); box.hidden = true; document.documentElement.style.overflow = ''; const b = $('#gamego'); if (b) b.focus(); }
+document.addEventListener('click', e => { if (e.target && e.target.id === 'gamego') openGame(); });
+/* the wall is the chat's own photos, so it ships encrypted too: collage.enc = iv(12) | ciphertext, same key as data.enc */
+async function hangWall(key) {
+  try {
+    let url = window.__COLLAGE__;
+    if (!url) { const r = await fetch('collage.enc', {cache:'no-store'}); if (!r.ok) return; const b = new Uint8Array(await r.arrayBuffer());
+      url = URL.createObjectURL(new Blob([await crypto.subtle.decrypt({name:'AES-GCM', iv:b.slice(0,12)}, key, b.slice(12))], {type:'image/jpeg'})); }
+    const im = new Image(); im.onload = () => { const w = $('#wall'); w.style.setProperty('--wall-img', `url("${url}")`); w.classList.add('up'); }; im.onerror = () => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); }; im.src = url;
+  } catch (e) { console.warn('wall unavailable', e); }
+}
+/* the wall drifts a little slower than the page. It tiles, so the offset just wraps. */
+const drift = matchMedia('(min-width:701px) and (hover:hover) and (prefers-reduced-motion:no-preference)');
+{ let tick = false; addEventListener('scroll', () => { if (tick) return; if (!drift.matches) { $('#wall').style.transform = ''; return; } tick = true; requestAnimationFrame(() => { const w = $('#wall'), t = parseFloat(getComputedStyle(w).getPropertyValue('--tile')) || 1500; w.style.transform = `translate3d(0,${-((scrollY * .14) % t)}px,0)`; tick = false; }); }, {passive:true}); }
+$('#lockform').addEventListener('submit', async e => {
+  e.preventDefault(); const btn = e.target.querySelector('button'); if (btn.disabled) return;
+  btn.disabled = true; $('#lockerr').textContent = 'Unlocking…';
+  try { await unlock($('#pw').value); } catch (err) { $('#lockerr').textContent = {pw: 'Wrong password.', net: 'Could not load the file. Check your connection and try again.', render: 'Unlocked, but the page failed to draw. Tell Clay.'}[err.message] || 'Something went wrong. Try again.'; }
+  btn.disabled = false;
+});
+try { const saved = sessionStorage.getItem('boys.pw'); if (saved) unlock(saved).catch(err => { if (err.message === 'pw') sessionStorage.removeItem('boys.pw'); }); } catch (e) {}
+// local proofing only: build/preview.sh injects window.__PREVIEW__ into a scratch copy that is never published
+if (window.__PREVIEW__) addEventListener('DOMContentLoaded', () => { D = window.__PREVIEW__; $('#lock').hidden = true; $('#app').hidden = false; render(); hangWall(); });
+
+/* ---------- tooltip ---------- */
+const tip = $('#tip');
+function showTip(html, x, y) { tip.innerHTML = html; tip.hidden = false; const r = tip.getBoundingClientRect(); tip.style.left = Math.max(8, Math.min(innerWidth - r.width - 8, x + 14)) + 'px'; tip.style.top = Math.max(8, y - r.height - 12) + 'px'; }
+document.addEventListener('pointermove', e => { const m = e.target.closest?.('[data-tip]'); if (m) showTip(m.dataset.tip, e.clientX, e.clientY); else tip.hidden = true; });
+document.addEventListener('focusin', e => { const m = e.target.closest?.('[data-tip]'); if (m) { const r = m.getBoundingClientRect(); showTip(m.dataset.tip, r.left + r.width / 2, r.top); } });
+document.addEventListener('focusout', () => { tip.hidden = true; });
+const T = html => `class="mark" tabindex="0" data-tip="${esc(html)}"`;
+
+/* ---------- building blocks ---------- */
+const legend = (names = WHO) => `<div class="legend">${names.map(w => `<span><i style="background:${COL[w]}"></i>${w}</span>`).join('')}</div>`;
+function table(head, rows) { return `<div class="tablewrap" hidden><table class="data"><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`; }
+function card(title, note, body, tbl, foot) {
+  return `<div class="card"><div class="cardhead"><div><h3>${title}</h3><div class="note">${note || ''}</div></div>${tbl ? '<button class="tbtn" type="button" data-toggle aria-expanded="false">Table</button>' : ''}</div>${body}${tbl || ''}${foot ? `<div class="foot">${foot}</div>` : ''}</div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-toggle]'); if (!b) return; const t = b.closest('.card').querySelector('.tablewrap'); t.hidden = !t.hidden; b.textContent = t.hidden ? 'Table' : 'Hide table'; b.setAttribute('aria-expanded', String(!t.hidden)); });
+const niceMax = v => { const raw = v / 4, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p; return 4 * (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p; };
+// column with a 4px rounded top and a square base
+const colPath = (x, y, w, h, r = 4) => { r = Math.min(r, h, w / 2); return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`; };
+const barPath = (x, y, w, h, r = 4) => { r = Math.min(r, w, h / 2); return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`; };
+
+/* horizontal bars, one per person: color follows the person, value at the tip */
+function personBars(get, {unit = '', digits = 0, tipFn} = {}) {
+  const vals = WHO.map(w => get(w)), max = niceMax(Math.max(...vals)), W = 420, L = 46, R = 64, rowH = 34, H = rowH * 4 + 4;
+  const f = v => digits ? v.toFixed(digits) : fmt(v);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img">` + WHO.map((w, i) => {
+    const bw = Math.max(2, (W - L - R) * vals[i] / max), y = i * rowH + 6;
+    return `<text x="${L - 8}" y="${y + 15}" text-anchor="end" class="strong" style="font-size:12.5px">${w}</text>` +
+      `<path d="${barPath(L, y, bw, 20)}" fill="${COL[w]}" ${T(tipFn ? tipFn(w) : `<b>${w}</b> · ${f(vals[i])}${unit}`)}/>` +
+      `<text x="${L + bw + 7}" y="${y + 15}" class="strong" style="font-size:12.5px">${f(vals[i])}${unit}</text>`;
+  }).join('') + `<line x1="${L}" x2="${L}" y1="0" y2="${H}" stroke="var(--axis)"/></svg>`;
+}
+const personTable = (label, get, extra = '') => table(['', label], WHO.map(w => [w, get(w) + extra]));
+
+/* monthly stacked columns */
+function monthlyChart() {
+  const all = []; const first = D.monthly[0].month, last = D.monthly[D.monthly.length - 1].month; const by = Object.fromEntries(D.monthly.map(m => [m.month, m]));
+  let [y, m] = first.split('-').map(Number); const [ly, lm] = last.split('-').map(Number);
+  while (y < ly || (y === ly && m <= lm)) { const k = `${y}-${String(m).padStart(2, '0')}`; all.push(by[k] || {month: k, Clay: 0, Mat: 0, Sam: 0, John: 0, empty: true}); if (++m > 12) { m = 1; y++; } }
+  const W = 1000, H = 300, L = 40, B = 26, Tp = 18, pw = (W - L - 6) / all.length, bw = Math.min(24, pw - 2);
+  const max = niceMax(Math.max(...all.map(r => WHO.reduce((s, w) => s + r[w], 0)))), sy = v => (H - B - Tp) * v / max;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" style="min-width:720px">`;
+  for (let t = 0; t <= 4; t++) { const v = max * t / 4, yy = H - B - sy(v); s += `<line x1="${L}" x2="${W}" y1="${yy}" y2="${yy}" stroke="var(--grid)"/><text x="${L - 6}" y="${yy + 4}" text-anchor="end" class="mut">${fmt(v)}</text>`; }
+  const gap = D.meta.gap || ['', ''], gi = all.findIndex(r => r.month === gap[0].slice(0, 7)) + 1, gj = all.findIndex(r => r.month === gap[1].slice(0, 7));
+  if (D.meta.gap && gj > gi) { const gx = L + gi * pw, gw = (gj - gi) * pw; s += `<rect x="${gx}" y="${Tp}" width="${gw}" height="${H - B - Tp}" fill="var(--wash)"/><text x="${gx + gw / 2}" y="${Tp + 16}" text-anchor="middle" class="strong">the lost months</text><text x="${gx + gw / 2}" y="${Tp + 31}" text-anchor="middle">between GroupMe and WhatsApp</text>`; }
+  (D.meta.eras || []).forEach((e, n) => { const i = all.findIndex(r => r.month === e.month); if (i < 0) return; const ex = L + i * pw; s += `<line x1="${ex}" x2="${ex}" y1="${Tp - 4}" y2="${H - B}" stroke="var(--mut, currentColor)" stroke-dasharray="3 4" opacity=".55"/><text x="${ex + 5}" y="${Tp + 8 + (n % 2) * 14}" class="strong">${esc(e.label)}</text>`; });
+  all.forEach((r, i) => {
+    const x = L + i * pw + (pw - bw) / 2; let yy = H - B; const tot = WHO.reduce((a, w) => a + r[w], 0);
+    const tipHtml = `<b>${MONTHS[+r.month.slice(5) - 1]} ${r.month.slice(0, 4)}</b> · ${fmt(tot)} messages<br>` + WHO.map(w => `${w} ${r[w]}`).join(' · ');
+    const present = WHO.filter(w => r[w] > 0);
+    present.forEach((w, k) => { const h = Math.max(1.5, sy(r[w])); yy -= h; const topSeg = k === present.length - 1; s += topSeg ? `<path d="${colPath(x, yy, bw, h - 0)}" fill="${COL[w]}"/>` : `<rect x="${x}" y="${yy + 2}" width="${bw}" height="${Math.max(1, h - 2)}" fill="${COL[w]}"/>`; });
+    if (tot) s += `<rect x="${L + i * pw}" y="${Tp}" width="${pw}" height="${H - B - Tp}" fill="transparent" ${T(tipHtml)}/>`;
+    if (r.month.endsWith('-01')) s += `<text x="${L + i * pw + pw / 2}" y="${H - 8}" text-anchor="middle">${r.month.slice(0, 4)}</text>`;
+  });
+  s += `<line x1="${L}" x2="${W}" y1="${H - B}" y2="${H - B}" stroke="var(--axis)"/></svg>`;
+  return s;
+}
+
+/* share of messages vs share of words (dumbbell) */
+function dumbbell() {
+  const tw = WHO.reduce((s, w) => s + D.people[w].words, 0), W = 420, L = 46, R = 20, rowH = 40, H = rowH * 4 + 28, max = 50, sx = v => L + (W - L - R) * v / max;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let t = 0; t <= 50; t += 10) s += `<line x1="${sx(t)}" x2="${sx(t)}" y1="0" y2="${H - 24}" stroke="var(--grid)"/><text x="${sx(t)}" y="${H - 8}" text-anchor="middle" class="mut">${t}%</text>`;
+  WHO.forEach((w, i) => { const a = D.people[w].share, b = 100 * D.people[w].words / tw, y = i * rowH + 20;
+    s += `<text x="${L - 8}" y="${y + 4}" text-anchor="end" class="strong" style="font-size:12.5px">${w}</text><line x1="${sx(a)}" x2="${sx(b)}" y1="${y}" y2="${y}" stroke="${COL[w]}" stroke-width="2" opacity=".45"/>` +
+      `<circle cx="${sx(a)}" cy="${y}" r="6" fill="var(--surface)" stroke="${COL[w]}" stroke-width="2.5" ${T(`<b>${w}</b> · ${a.toFixed(1)}% of messages`)}/>` +
+      `<circle cx="${sx(b)}" cy="${y}" r="7" fill="${COL[w]}" stroke="var(--surface)" stroke-width="2" ${T(`<b>${w}</b> · ${b.toFixed(1)}% of words`)}/>` +
+      `<text x="${sx(Math.max(a, b)) + 12}" y="${y + 4}" class="strong">${b > a ? '+' : ''}${(b - a).toFixed(1)} pts</text>`; });
+  return s + '</svg>';
+}
+
+/* hour-of-day small multiples */
+function hoursChart() {
+  return `<div class="grid g4">` + WHO.map(w => {
+    const h = D.hours[w], tot = h.reduce((a, b) => a + b, 0), W = 240, H = 120, L = 4, B = 18, bw = (W - L * 2) / 24, max = Math.max(...h);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+    h.forEach((v, i) => { const hh = (H - B - 8) * v / max; s += `<path d="${colPath(L + i * bw + 1, H - B - hh, bw - 2, Math.max(.5, hh), 2)}" fill="${COL[w]}" ${T(`<b>${w}</b> · ${i % 12 || 12}${i < 12 ? 'am' : 'pm'} · ${v} msgs (${(100 * v / tot).toFixed(1)}%)`)}/>`; });
+    [0, 6, 12, 18].forEach(i => s += `<text x="${L + i * bw + bw / 2}" y="${H - 4}" text-anchor="middle" class="mut">${['12a', '6a', '12p', '6p'][i / 6]}</text>`);
+    s += `<line x1="${L}" x2="${W - L}" y1="${H - B}" y2="${H - B}" stroke="var(--axis)"/></svg>`;
+    const p = D.people[w];
+    return `<div><div class="who"><i class="dot" style="background:${COL[w]}"></i>${w}</div>${s}<div class="foot" style="margin-top:4px">Peak ${p.peak_hour % 12 || 12}${p.peak_hour < 12 ? 'am' : 'pm'} · ${p.night_owl}% after 11pm · ${p.work_hours}% during work hours</div></div>`;
+  }).join('') + '</div>';
+}
+
+/* weekday x hour heatmap (sequential, one hue) */
+function heatmap() {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], max = Math.max(...D.heat.flat()), W = 640, L = 36, cw = (W - L) / 24, ch = 22, H = ch * 7 + 22;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  D.heat.forEach((row, d) => { s += `<text x="${L - 8}" y="${d * ch + 15}" text-anchor="end">${days[d]}</text>`; row.forEach((v, h) => { const k = v ? 1 + Math.min(6, Math.floor(7 * Math.sqrt(v / max) * .999)) : 0; s += `<rect x="${L + h * cw + 1}" y="${d * ch + 1}" width="${cw - 2}" height="${ch - 2}" rx="3" fill="var(--seq${k})" ${T(`<b>${days[d]} ${h % 12 || 12}${h < 12 ? 'am' : 'pm'}</b> · ${v} messages`)}/>`; }); });
+  [0, 3, 6, 9, 12, 15, 18, 21].forEach(h => s += `<text x="${L + h * cw + cw / 2}" y="${H - 6}" text-anchor="middle" class="mut">${h % 12 || 12}${h < 12 ? 'a' : 'p'}</text>`);
+  return s + `</svg><div class="legend" style="margin-top:8px;align-items:center"><span>fewer</span>${[1, 2, 3, 4, 5, 6, 7].map(k => `<i style="background:var(--seq${k});margin:0"></i>`).join('')}<span>more messages</span></div>`;
+}
+
+/* matrices */
+function lum(varName) { return null; }
+function matrix(m, {fmtv = v => v, color, rowLabel = 'from', colLabel = 'to', tipFn}) {
+  let s = `<div class="scroll"><table class="mx"><tr><th></th>${WHO.map(w => `<th>${w}</th>`).join('')}</tr>`;
+  WHO.forEach(a => { s += `<tr><th class="row">${a}</th>` + WHO.map(b => { if (a === b || m[a][b] == null) return '<td class="self">·</td>'; const c = color(m[a][b]); return `<td style="background:${c.bg};color:${c.fg}" ${T(tipFn(a, b, m[a][b]))}>${fmtv(m[a][b])}</td>`; }).join('') + '</tr>'; });
+  return s + '</table></div>';
+}
+const isDark = () => matchMedia('(prefers-color-scheme:dark)').matches && document.documentElement.dataset.theme !== 'light';
+const divColor = v => v >= 1.25 ? {bg: 'var(--div-hi)', fg: isDark() ? '#17110d' : '#fff'} : v >= 1.08 ? {bg: 'var(--div-hi2)', fg: 'var(--ink)'} : v > .92 ? {bg: 'var(--div-mid)', fg: 'var(--ink)'} : v > .75 ? {bg: 'var(--div-lo2)', fg: 'var(--ink)'} : {bg: 'var(--div-lo)', fg: '#17110d'};
+const seqColor = max => v => { const k = 1 + Math.min(6, Math.floor(7 * (v / max) * .999)); const dark = matchMedia('(prefers-color-scheme:dark)').matches; const light = dark ? k >= 5 : k <= 3; return {bg: `var(--seq${k})`, fg: light ? (dark ? '#0b0b0b' : 'var(--ink)') : '#fff'}; };
+
+/* four-node network */
+function network() {
+  const W = 420, H = 330, pos = {Clay: [210, 46], Sam: [60, 170], John: [360, 170], Mat: [210, 292]}, max = Math.max(...Object.values(D.pairs).map(p => p.turns));
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  Object.entries(D.pairs).forEach(([k, p]) => { const [a, b] = k.split('-'), [x1, y1] = pos[a], [x2, y2] = pos[b], sw = 1.5 + 15 * p.turns / max, mx = (x1 + x2) / 2, my = (y1 + y2) / 2, off = (k === 'Clay-Mat') ? -34 : (k === 'Sam-John') ? 0 : 0;
+    s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--ink2)" stroke-opacity=".35" stroke-width="${sw}" stroke-linecap="round" ${T(`<b>${a} ↔ ${b}</b><br>${fmt(p.turns)} back-and-forths (${p.share}% of all)<br>chemistry ${p.affinity.toFixed(2)}× chance`)}/>`;
+    const lx = mx + (k === 'Sam-John' ? -78 : 0), ly = my + (k === 'Clay-Mat' ? 58 : 0);
+    s += `<rect x="${lx - 19}" y="${ly - 10}" width="38" height="19" rx="9.5" fill="var(--surface)" stroke="var(--ring)"/><text x="${lx}" y="${ly + 4}" text-anchor="middle" class="strong">${p.turns}</text>`; });
+  WHO.forEach(w => { const [x, y] = pos[w]; s += `<circle cx="${x}" cy="${y}" r="27" fill="${COL[w]}" stroke="var(--surface)" stroke-width="3"/><text x="${x}" y="${y + 4.5}" text-anchor="middle" style="fill:${w === 'Clay' ? '#fff' : '#17110d'};font-weight:700;font-size:13px">${w}</text>`; });
+  return s + '</svg>';
+}
+
+/* starters vs crickets */
+function startersChart() {
+  const W = 420, L = 46, R = 70, rowH = 36, H = rowH * 4 + 4, max = niceMax(Math.max(...WHO.map(w => D.people[w].starts)));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img">` + WHO.map((w, i) => { const p = D.people[w], y = i * rowH + 6, full = (W - L - R) * p.starts / max, ans = (W - L - R) * (p.starts - p.crickets) / max;
+    return `<text x="${L - 8}" y="${y + 15}" text-anchor="end" class="strong" style="font-size:12.5px">${w}</text>` +
+      `<rect x="${L}" y="${y}" width="${Math.max(1, ans - 1)}" height="20" fill="${COL[w]}" ${T(`<b>${w}</b> · ${p.starts - p.crickets} openers that got a reply`)}/>` +
+      `<path d="${barPath(L + ans + 1, y, Math.max(2, full - ans - 1), 20)}" fill="${COL[w]}" opacity=".32" ${T(`<b>${w}</b> · ${p.crickets} openers met with silence (${p.crickets_rate}%)`)}/>` +
+      `<text x="${L + full + 7}" y="${y + 15}" class="strong" style="font-size:12.5px">${p.starts}</text><text x="${L + full + 7 + String(p.starts).length * 8 + 4}" y="${y + 15}" class="mut">${p.crickets_rate}% 🦗</text>`; }).join('') + `<line x1="${L}" x2="${L}" y1="0" y2="${H}" stroke="var(--axis)"/></svg>`;
+}
+
+/* topics: grouped rows of thin bars per person */
+function topicsChart() {
+  const names = Object.keys(D.topics), W = 640, L = 108, R = 40, rowH = 58, H = rowH * names.length, max = niceMax(Math.max(...names.flatMap(n => WHO.map(w => D.topics[n].by[w] || 0))));
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" style="min-width:480px">`;
+  names.forEach((n, i) => { const y0 = i * rowH + 6; s += `<text x="${L - 10}" y="${y0 + 22}" text-anchor="end" class="strong" style="font-size:12.5px">${esc(n)}</text><text x="${L - 10}" y="${y0 + 36}" text-anchor="end" class="mut">${D.topics[n].total} msgs</text>`;
+    WHO.forEach((w, k) => { const v = D.topics[n].by[w] || 0, bw = Math.max(1.5, (W - L - R) * v / max), y = y0 + k * 11; s += `<path d="${barPath(L, y, bw, 9, 3)}" fill="${COL[w]}" ${T(`<b>${esc(n)}</b> · ${w} · ${v} messages`)}/>`; if (v === Math.max(...WHO.map(x => D.topics[n].by[x] || 0))) s += `<text x="${L + bw + 6}" y="${y + 8.5}" class="strong">${w} ${v}</text>`; });
+    if (i) s += `<line x1="0" x2="${W}" y1="${y0 - 5}" y2="${y0 - 5}" stroke="var(--grid)"/>`; });
+  return s + `<line x1="${L}" x2="${L}" y1="0" y2="${H}" stroke="var(--axis)"/></svg>`;
+}
+
+/* ---------- predictions ---------- */
+const GRADES = {hit: ['Called it', 'var(--good)', '✓'], partial: ['Half credit', 'var(--warn)', '◐'], miss: ['Whiff', 'var(--crit)', '✕'], pending: ['Jury still out', 'var(--muted)', '…'], ungradable: ['Unfalsifiable', 'var(--axis)', '∅']};
+const gradeChip = g => { const [l, c, ic] = GRADES[g] || GRADES.ungradable; return `<span class="grade" style="--g:${c}"><i style="background:${c}"></i>${ic} ${l}</span>`; };
+let pf = {who: 'All', grade: 'All', all: false};
+/* forecasts are scored; promises about your own behaviour go on the homework docket instead */
+const FORE = () => (D.predictions || []).filter(p => p.kind !== 'homework'), HW = () => (D.predictions || []).filter(p => p.kind === 'homework');
+const HWG = {hit: ['Turned in', 'var(--good)', '✓'], partial: ['Half credit', 'var(--warn)', '◐'], miss: ['Never turned in', 'var(--crit)', '✕'], pending: ['Still owed', 'var(--muted)', '…'], ungradable: ['No proof either way', 'var(--axis)', '∅']};
+function homework() {
+  const H = HW(); if (!H.length) return '';
+  const tally = WHO.map(w => { const m = H.filter(p => p.who === w); return m.length ? `<span><i class="dot" style="background:${COL[w]}"></i><b>${w}</b> ${m.length} assigned, ${m.filter(p => p.grade === 'hit').length} turned in on time</span>` : ''; }).join('');
+  const order = {miss: 0, partial: 1, pending: 2, ungradable: 3, hit: 4};
+  return `<h3 style="margin:40px 0 6px">The homework docket</h3><p class="sub">Promises about your own behaviour: books to read, films to watch, essays to file. They are not forecasts, so they do not touch anyone's accuracy. They are, however, on the record.</p><div class="pairnums" style="margin-bottom:16px">${tally}</div><div class="grid g2">` +
+    H.slice().sort((a, b) => order[a.grade] - order[b.grade] || a.date.localeCompare(b.date)).map(p => { const [l, c, ic] = HWG[p.grade] || HWG.ungradable;
+      return `<div class="card pred" style="border-left:4px solid ${COL[p.who]}"><div class="top"><span class="who"><i class="dot" style="background:${COL[p.who]}"></i>${p.who}</span><span>${niceDate(p.date)}</span><span class="grade" style="--g:${c}"><i style="background:${c}"></i>${ic} ${l}</span></div><div class="claim">${esc(p.claim)}</div><blockquote style="--c:${COL[p.who]};margin-top:2px">“${esc(p.quote)}”</blockquote><div class="verdict">${esc(p.verdict || '')}</div></div>`; }).join('') + '</div>';
+}
+function predSection() {
+  const P = FORE();
+  const score = WHO.map(w => { const mine = P.filter(p => p.who === w), n = g => mine.filter(p => p.grade === g).length, graded = n('hit') + n('miss') + n('partial'), pct = graded ? Math.round(100 * (n('hit') + .5 * n('partial')) / graded) : null;
+    return `<div class="card person" style="--c:${COL[w]}"><div class="who"><i class="dot" style="background:${COL[w]}"></i>${w}</div><div class="big">${pct == null ? 'n/a' : pct + '%'} <small>accuracy on ${graded} graded</small></div>` +
+      `<div class="stack">${['hit', 'partial', 'miss', 'pending', 'ungradable'].map(g => n(g) ? `<i style="flex:${n(g)};background:${GRADES[g][1]}" ${T(`${GRADES[g][0]} · ${n(g)}`)}></i>` : '').join('')}</div>` +
+      `<div class="foot" style="margin:0">${n('hit')} called · ${n('partial')} half · ${n('miss')} whiffed · ${n('pending')} pending · ${mine.length} on the record</div></div>`; }).join('');
+  return `<div class="score">${score}</div><div class="filters" id="pf-who">${['All', ...WHO].map(w => `<button class="chip" data-k="who" data-v="${w}" aria-pressed="${pf.who === w}">${w}</button>`).join('')}</div>` +
+    `<div class="filters" id="pf-grade">${['All', ...Object.keys(GRADES)].map(g => `<button class="chip" data-k="grade" data-v="${g}" aria-pressed="${pf.grade === g}">${g === 'All' ? 'Every verdict' : GRADES[g][2] + ' ' + GRADES[g][0]}</button>`).join('')}</div><p class="sub" id="predcount" style="margin-bottom:12px"></p><div class="grid g2" id="predlist"></div><div style="text-align:center;margin-top:18px"><button class="chip" id="predmore" type="button"></button></div>`;
+}
+function drawPreds() {
+  const full = FORE().filter(p => (pf.who === 'All' || p.who === pf.who) && (pf.grade === 'All' || p.grade === pf.grade));
+  const list = pf.all ? full : full.slice(0, 12);
+  $('#predmore').hidden = full.length <= 12; $('#predmore').textContent = pf.all ? 'Show fewer' : `Show all ${full.length}`;
+  $('#predcount').textContent = `${full.length} on the docket, most interesting first.`;
+  $('#predlist').innerHTML = list.map(p => `<div class="card pred" style="border-left:4px solid ${COL[p.who]}"><div class="top"><span class="who"><i class="dot" style="background:${COL[p.who]}"></i>${p.who}</span><span>${niceDate(p.date)}</span><span>${esc(p.topic || '')}</span>${gradeChip(p.grade)}</div>` +
+    `<div class="claim">${esc(p.claim)}</div><blockquote style="--c:${COL[p.who]};margin-top:2px">“${esc(p.quote)}”</blockquote><div class="verdict"><b>Verdict.</b> ${esc(p.verdict || '')}</div></div>`).join('') || '<p class="sub">Nothing on the docket for that combination.</p>';
+  document.querySelectorAll('#pf-who .chip, #pf-grade .chip').forEach(b => b.setAttribute('aria-pressed', String(pf[b.dataset.k] === b.dataset.v)));
+}
+document.addEventListener('click', e => { if (e.target.id === 'predmore') { pf.all = !pf.all; drawPreds(); return; } const b = e.target.closest('.chip[data-k]'); if (!b) return; pf[b.dataset.k] = b.dataset.v; drawPreds(); });
+
+/* ---------- drop box ----------
+   Each file is sealed in the browser with the same key that opened this page, then uploaded to a private bucket
+   that accepts uploads and nothing else. Sealed blob = salt(16) | iv(12) | AES-GCM( u32 header length | header JSON | file bytes ). */
+const dz = {who: null, files: []};
+async function seal(meta, bytes) {
+  const head = new TextEncoder().encode(JSON.stringify(meta)), plain = new Uint8Array(4 + head.length + bytes.length);
+  new DataView(plain.buffer).setUint32(0, head.length); plain.set(head, 4); plain.set(bytes, 4 + head.length);
+  const iv = crypto.getRandomValues(new Uint8Array(12)), ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv}, SEAL.key, plain));
+  const out = new Uint8Array(28 + ct.length); out.set(SEAL.salt, 0); out.set(iv, 16); out.set(ct, 28); return out;
+}
+async function sendDrop(meta, bytes) {
+  const id = [...crypto.getRandomValues(new Uint8Array(9))].map(b => b.toString(16).padStart(2, '0')).join('');
+  const r = await fetch(`${D.drop.url}/storage/v1/object/${D.drop.bucket}/${new Date().toISOString().slice(0, 10)}/${id}.bin`, {method:'POST', headers:{apikey: D.drop.key, Authorization:'Bearer ' + D.drop.key, 'Content-Type':'application/octet-stream', 'x-upsert':'false'}, body: await seal(meta, bytes)});
+  if (!r.ok) throw new Error('upload ' + r.status);
+}
+function dzRefresh() {
+  const note = $('#dznote').value.trim();
+  $('#dzgo').disabled = !SEAL || !dz.who || (!dz.files.length && !note);
+  $('#dzgo').textContent = !SEAL ? 'Unlock the live site to file' : !dz.who ? 'Say who you are first' : dz.files.length ? `File ${dz.files.length} item${dz.files.length > 1 ? 's' : ''}` : note ? 'File the note' : 'File it';
+}
+function dzAdd(list) {
+  for (const f of list) { const big = f.size > D.drop.max_mb * 1048576; dz.files.push({f, big});
+    $('#dzlist').insertAdjacentHTML('beforeend', `<li class="${big ? 'bad' : ''}"><span>${esc(f.name)} · ${(f.size / 1048576).toFixed(1)} MB</span><span>${big ? 'too big, send Clay a link' : 'ready'}</span></li>`); }
+  dz.files = dz.files.filter(x => !x.big); dzRefresh();
+}
+document.addEventListener('click', e => {
+  const w = e.target.closest('#dzwho .chip'); if (w) { dz.who = w.dataset.who; document.querySelectorAll('#dzwho .chip').forEach(c => c.setAttribute('aria-pressed', String(c === w))); dzRefresh(); return; }
+  if (e.target.closest('#dz')) { $('#dzfile').click(); return; }
+  if (e.target.id === 'dzgo') dzFile();
+});
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.id === 'dz') { e.preventDefault(); $('#dzfile').click(); } });
+document.addEventListener('change', e => { if (e.target.id === 'dzfile') { dzAdd(e.target.files); e.target.value = ''; } });
+document.addEventListener('input', e => { if (e.target.id === 'dznote') dzRefresh(); });
+['dragenter', 'dragover'].forEach(t => document.addEventListener(t, e => { const z = e.target.closest?.('#dz'); if (z) { e.preventDefault(); z.classList.add('over'); } }));
+['dragleave', 'drop'].forEach(t => document.addEventListener(t, e => { const z = e.target.closest?.('#dz'); if (!z) return; e.preventDefault(); z.classList.remove('over'); if (t === 'drop' && e.dataTransfer) dzAdd(e.dataTransfer.files); }));
+async function dzFile() {
+  const note = $('#dznote').value.trim(), rows = [...document.querySelectorAll('#dzlist li:not(.bad):not(.ok)')], base = {who: dz.who, note, at: new Date().toISOString(), page: 'boys'};
+  $('#dzgo').disabled = true; let failed = 0;
+  if (!dz.files.length) { try { await sendDrop({...base, kind: 'note'}, new Uint8Array(0)); $('#dzlist').insertAdjacentHTML('beforeend', '<li class="ok"><span>Note</span><span>filed</span></li>'); } catch (err) { failed++; $('#dzlist').insertAdjacentHTML('beforeend', '<li class="bad"><span>Note</span><span>failed, try again</span></li>'); } }
+  for (let i = 0; i < dz.files.length; i++) { const {f} = dz.files[i], row = rows[i], st = row?.lastElementChild;
+    try { if (st) st.textContent = 'sealing and sending…'; await sendDrop({...base, kind: 'file', name: f.name, type: f.type, size: f.size, modified: f.lastModified}, new Uint8Array(await f.arrayBuffer())); if (row) { row.className = 'ok'; st.textContent = 'filed'; } }
+    catch (err) { failed++; if (row) { row.className = 'bad'; st.textContent = 'failed, try again'; } } }
+  dz.files = []; if (!failed) $('#dznote').value = ''; dzRefresh();
+}
+
+/* ---------- page ---------- */
+const quoteBlock = q => `<blockquote style="--c:${COL[q.who] || 'var(--axis)'}">“${esc(q.quote)}”<footer>${esc(q.who)} · ${niceDate(q.date)}${q.context ? ' · ' + esc(q.context) : ''}</footer></blockquote>`;
+function render() {
+  const P = D.people, M = D.meta, Tt = D.totals, yrs = (M.days / 365.25).toFixed(1);
+  const sections = [['cast', 'The cast'], ['volume', 'Volume'], ['rhythm', 'Rhythm'], ['bonds', 'Who talks to whom'], ['pairs', 'The six pairings'], ['ledger', 'Prediction ledger'], ['topics', 'Topics'], ['bits', 'Running bits'], ['hall', 'Hall of fame'], ['awards', 'Awards'], ['timeline', 'Timeline'], ...(D.game ? [['game', 'The game']] : []), ...(D.drop ? [['intake', 'Add evidence']] : []), ['method', 'Fine print']];
+  let h = `<nav><div class="wrap">${sections.map(([id, l]) => `<a href="#${id}">${l}</a>`).join('')}</div></nav><div class="wrap">`;
+
+  h += `<header class="hero"><div class="folder" data-tab="Case file no. ${fmt(Tt.messages)}"><div class="typed">🐚 A forensic audit of one group chat<br>Opened ${niceDate(M.first)} · Last entry ${niceDate(M.last)} · Status: ongoing</div><div class="titlerow"><h1>Boys</h1><div class="stamp" aria-hidden="true">Audited<small>every last word</small></div></div><p class="lede">${esc(D.intro || '')}</p></div>
+    <div class="kpis"><div class="tile wide"><div class="v big">${fmt(Tt.messages)}</div><div class="l">messages, ${niceDate(M.first)} to ${niceDate(M.last)}</div></div>
+    <div class="tile"><div class="v">${fmt(Tt.words)}</div><div class="l">words. ${esc(D.words_compare || '')}</div></div>
+    <div class="tile"><div class="v">${yrs} yrs</div><div class="l">${fmt(D.active_days)} days with at least one message</div></div>
+    <div class="tile"><div class="v">${fmt(Tt.links)}</div><div class="l">links dropped, plus ${fmt(Tt.media)} photos and videos</div></div>
+    <div class="tile"><div class="v">${fmt(D.convos.count)}</div><div class="l">separate conversations. Only ${D.convos.all_four} got all four of you talking</div></div>
+    <div class="tile"><div class="v">${D.longest_streak.days} days</div><div class="l">longest daily streak, ending ${niceDate(D.longest_streak.end)}</div></div></div></header>`;
+
+  /* cast */
+  h += `<section id="cast"><div class="kicker">Dramatis personae</div><h2>The cast</h2><p class="sub">${esc(D.cast_intro || '')}</p><div class="grid g2">` + WHO.map(w => { const p = P[w], pt = (D.portraits || {})[w] || {};
+    return `<div class="card person" style="--c:${COL[w]}"><h3>${w}</h3><div class="arch">${esc(pt.archetype || '')}</div><p>${esc(pt.blurb || '')}</p>
+      <ul class="facts"><li><span>Messages</span><span>${fmt(p.messages)} (${p.share}%)</span></li><li><span>Words</span><span>${fmt(p.words)}</span></li><li><span>Typical message</span><span>${p.median_words} words</span></li><li><span>Essays (100+ words)</span><span>${p.essays}</span></li><li><span>Links · photos</span><span>${p.links} · ${p.media}</span></li><li><span>Ends a message with a question</span><span>${p.question_rate}%</span></li><li><span>Favorite laugh</span><span>${esc(Object.entries(p.laughs).sort((a, b) => b[1] - a[1])[0]?.join(' ×') || 'none on record')}</span></li><li><span>Top source</span><span>${esc(p.top_domains[0] ? p.top_domains[0][0] + ' ×' + p.top_domains[0][1] : '')}</span></li></ul>
+      <div class="foot" style="margin-top:14px">Words ${w} uses far more than the other three:</div><div class="words">${(D.distinctive[w] || []).slice(0, 14).map(d => `<span ${T(`${w} ${d.mine}× · everyone else ${d.others}×`)} tabindex="0">${esc(d.word)}</span>`).join('')}</div>
+      ${pt.sample ? quoteBlock({...pt.sample, who: w}) : ''}</div>`; }).join('') + `</div></section>`;
+
+  /* volume */
+  h += `<section id="volume"><div class="kicker">Volume</div><h2>${esc(D.heads?.volume || 'Nearly seven years of talk')}</h2><p class="sub">${esc(D.subs?.volume || '')}</p>
+    ${card('Messages per month', 'Stacked by sender. Hover or tap a column for the split.', legend() + `<div class="scroll">${monthlyChart()}</div>`, table(['Month', ...WHO, 'Total'], D.monthly.map(m => [m.month, ...WHO.map(w => m[w]), WHO.reduce((s, w) => s + m[w], 0)])))}
+    <div class="grid g2" style="margin-top:16px">
+    ${card('Messages sent', 'Who fills the scroll.', personBars(w => P[w].messages), personTable('Messages', w => P[w].messages))}
+    ${card('Words written', 'Who fills the page.', personBars(w => P[w].words), personTable('Words', w => P[w].words))}
+    ${card('Share of messages vs. share of words', 'Hollow dot: share of messages. Solid dot: share of words.', dumbbell(), table(['', 'Messages %', 'Words %'], WHO.map(w => [w, P[w].share, (100 * P[w].words / WHO.reduce((s, x) => s + P[x].words, 0)).toFixed(1)])), esc(D.notes?.dumbbell || ''))}
+    ${card('Average words per message', 'The mean, which essays drag upward.', personBars(w => P[w].avg_words, {digits: 1}), personTable('Avg words', w => P[w].avg_words), esc(D.notes?.avg || ''))}
+    ${card('Longest rant', 'Most typed messages in a row before anyone else got a word in. Photos, videos and bare links do not count.', personBars(w => P[w].longest_burst.n, {tipFn: w => `<b>${w}</b> · ${P[w].longest_burst.n} typed messages in a row (${fmt(P[w].longest_burst.words)} words) on ${niceDate(P[w].longest_burst.date)}`}), table(['', 'In a row', 'Words', 'Date'], WHO.map(w => [w, P[w].longest_burst.n, P[w].longest_burst.words, P[w].longest_burst.date])), esc(D.notes?.burst || ''))}
+    ${card('Photos and videos', 'Show, don’t tell.', personBars(w => P[w].media), personTable('Media', w => P[w].media))}
+    </div></section>`;
+
+  /* rhythm */
+  h += `<section id="rhythm"><div class="kicker">Rhythm</div><h2>${esc(D.heads?.rhythm || 'When the chat is awake')}</h2><p class="sub">${esc(D.subs?.rhythm || '')}</p>
+    ${card('Each man’s day', 'Messages by hour, Eastern time. Each panel is scaled to its own peak.', hoursChart(), table(['Hour', ...WHO], D.hours.Clay.map((_, i) => [`${i}:00`, ...WHO.map(w => D.hours[w][i])])))}
+    <div class="grid g2" style="margin-top:16px">${card('The week at a glance', 'All messages, by weekday and hour. Darker means busier.', `<div class="scroll">${heatmap()}</div>`, table(['Day', ...Array.from({length: 24}, (_, i) => i)], ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, i) => [d, ...D.heat[i]])))}
+    <div class="card"><h3>Red-letter days</h3><div class="note">The busiest days on record.</div><ul class="facts">${D.busiest_days.slice(0, 8).map(b => `<li><span>${niceDate(b.date)}${b.label ? ' · ' + esc(b.label) : ''}</span><span>${b.n}</span></li>`).join('')}</ul>
+    <h3 style="margin-top:22px">Longest silences</h3><ul class="facts">${D.longest_silences.slice(0, 4).map(s => `<li><span>${niceDate(s.from)} to ${niceDate(s.to)} · broken by ${s.broken_by}</span><span>${Math.round(s.days)} days</span></li>`).join('')}</ul></div></div></section>`;
+
+  /* bonds */
+  const likeMax = Math.max(...WHO.flatMap(a => WHO.map(b => a === b ? 0 : D.likes.matrix[a][b])));
+  h += `<section id="bonds"><div class="kicker">Relationships, by the numbers</div><h2>${esc(D.heads?.bonds || 'Who talks to whom')}</h2><p class="sub">${esc(D.subs?.bonds || '')}</p><div class="grid g2">
+    ${card('The shape of the chat', 'Line weight and number: how many times these two spoke back to back.', network(), table(['Pair', 'Back-and-forths', 'Share', 'Chemistry'], Object.entries(D.pairs).map(([k, p]) => [k.replace('-', ' ↔ '), p.turns, p.share + '%', p.affinity.toFixed(2) + '×'])))}
+    ${card('Chemistry', 'How often the column person speaks right after the row person, against what you would expect from how much each talks. 1.0 is chance.', matrix(D.affinity, {fmtv: v => v.toFixed(2) + '×', color: divColor, tipFn: (a, b, v) => `After <b>${a}</b> speaks, <b>${b}</b> is next ${v.toFixed(2)}× as often as chance`}) + `<div class="legend" style="justify-content:center;margin-top:12px"><span><i style="background:var(--div-lo)"></i>well under chance</span><span><i style="background:var(--div-mid)"></i>about chance</span><span><i style="background:var(--div-hi)"></i>well over</span></div>`, null, esc(D.notes?.chem || ''))}
+    ${card('Who starts things, and who hears crickets', 'Conversations opened after 4+ quiet hours. The faded end is openers nobody answered within four hours.', startersChart(), table(['', 'Opened', 'Unanswered', 'Rate'], WHO.map(w => [w, P[w].starts, P[w].crickets, P[w].crickets_rate + '%'])), esc(D.notes?.crickets || ''))}
+    ${card('Reply speed', 'Median minutes from the row person’s last message to the column person speaking next, inside a live conversation.', matrix(D.response_min, {fmtv: v => v + 'm', color: seqColor(10), tipFn: (a, b, v) => `<b>${b}</b> answers <b>${a}</b> in a median ${v} min`}), null, esc(D.notes?.speed || ''))}
+    ${card('Who likes whom', 'Twitter reactions and GroupMe hearts (2019 to 2024). Row gave it, column got it. WhatsApp exports drop reactions.', matrix(D.likes.matrix, {color: seqColor(likeMax), tipFn: (a, b, v) => `<b>${a}</b> liked ${v} of <b>${b}</b>’s messages`}), null, esc(D.notes?.likes || ''))}
+    ${card('Hearts earned per message', 'Twitter and GroupMe years. Likes received divided by messages sent there.', personBars(w => D.likes.per_msg[w], {digits: 2}), personTable('Likes per message', w => D.likes.per_msg[w]), esc(D.notes?.likerate || ''))}
+    </div></section>`;
+
+  /* pairs */
+  h += `<section id="pairs"><div class="kicker">Relationships, read closely</div><h2>${esc(D.heads?.pairs || 'The six pairings')}</h2><div class="prose sub" style="max-width:none">${(D.group_read || []).map(p => `<p>${esc(p)}</p>`).join('')}</div><div class="grid g2">` +
+    (D.relationships || []).map(r => { const [a, b] = r.pair.split('-'), st = D.pairs[r.pair], fa = D.follow[a][b], fb = D.follow[b][a];
+      return `<div class="card pair"><h3><span>${a} + ${b}</span>${esc(r.title)}</h3><div class="pairbar"><i style="flex:${fb};background:${COL[a]}" ${T(`${a} replied to ${b} ${fb} times`)}></i><i style="flex:${fa};background:${COL[b]}" ${T(`${b} replied to ${a} ${fa} times`)}></i></div>
+      <div class="pairnums"><span><b>${fmt(st.turns)}</b> back-and-forths</span><span><b>${st.affinity.toFixed(2)}×</b> chemistry</span><span><b>${D.duets[r.pair] || 0}</b> two-man duets</span><span>names each other <b>${D.mentions[a][b] + D.mentions[b][a]}</b> times</span></div>
+      ${r.body.map(p => `<p>${esc(p)}</p>`).join('')}${(r.receipts || []).map(quoteBlock).join('')}</div>`; }).join('') + `</div></section>`;
+
+  /* ledger */
+  h += `<section id="ledger"><div class="kicker">Accountability</div><h2>${esc(D.heads?.ledger || 'The prediction ledger')}</h2><p class="sub">${esc(D.subs?.ledger || '')}</p>${D.epigraph ? `<div style="max-width:60ch;margin:0 0 28px">${quoteBlock(D.epigraph)}</div>` : ''}${predSection()}${homework()}</section>`;
+
+  /* topics */
+  h += `<section id="topics"><div class="kicker">Subject matter</div><h2>${esc(D.heads?.topics || 'What you actually talk about')}</h2><p class="sub">${esc(D.subs?.topics || '')}</p>
+    ${card('Keyword census', 'Messages that mention each subject, by sender. A message can count for more than one.', legend() + `<div class="scroll">${topicsChart()}</div>`, table(['Topic', ...WHO, 'Total'], Object.entries(D.topics).map(([n, t]) => [n, ...WHO.map(w => t.by[w] || 0), t.total])))}
+    ${(D.debates || []).length ? `<h3 style="margin:32px 0 14px">Great debates</h3><div class="grid g2">${D.debates.map(d => `<div class="card"><div class="top" style="font-size:12.5px;color:var(--ink2)">${niceDate(d.date)} · ${esc(d.temperature)}</div><h3 style="margin:4px 0 10px">${esc(d.topic)}</h3><ul class="facts" style="margin:0">${Object.entries(d.sides).map(([w, pos]) => `<li style="display:block"><span class="who"><i class="dot" style="background:${COL[w] || 'var(--axis)'}"></i>${esc(w)}</span> <span style="font-weight:400;text-align:left">${esc(pos)}</span></li>`).join('')}</ul><div class="foot">${esc(d.ended)}</div></div>`).join('')}</div>` : ''}</section>`;
+
+  /* bits */
+  h += `<section id="bits"><div class="kicker">Lore</div><h2>${esc(D.heads?.bits || 'Running bits')}</h2><p class="sub">${esc(D.subs?.bits || '')}</p><div class="grid g2">${(D.bits || []).map(b => `<div class="card"><h3>${esc(b.name)}</h3><p style="margin-top:8px">${esc(b.explanation)}</p>${(b.examples || []).map(quoteBlock).join('')}</div>`).join('')}</div></section>`;
+
+  /* hall */
+  h += `<section id="hall"><div class="kicker">Hall of fame</div><h2>${esc(D.heads?.hall || 'Lines worth framing')}</h2><p class="sub">${esc(D.subs?.hall || '')}</p><div class="grid g2">${(D.quotes || []).map(q => `<div class="card"><div class="kicker" style="margin-bottom:0">${esc(q.category)}</div>${quoteBlock(q)}</div>`).join('')}</div>
+    ${(D.likes.trifectas || []).length ? `<h3 style="margin:32px 0 6px">The trifecta club</h3><p class="sub">Messages that all three other guys liked or reacted to. It happened ${D.likes.trifecta_total} times in ${fmt(D.likes.pool)} tries${D.likes.trifecta_total > D.likes.trifectas.length ? ' (the printable ones are below)' : ''}.</p><div class="grid g2">${D.likes.trifectas.map(q => `<div class="card">${quoteBlock({who: q.who, date: q.date, quote: q.text})}</div>`).join('')}</div>` : ''}</section>`;
+
+  /* awards */
+  h += `<section id="awards"><div class="kicker">Superlatives</div><h2>${esc(D.heads?.awards || 'The awards')}</h2><div class="grid g2" style="margin-top:20px">${(() => { const by = WHO.map(w => (D.awards || []).filter(a => a.who === w)), rest = (D.awards || []).filter(a => !WHO.includes(a.who)), out = []; for (let i = 0; by.some(l => l[i]); i++) by.forEach(l => l[i] && out.push(l[i])); return out.concat(rest); })().map(a => `<div class="card award" style="border-top:4px solid ${COL[a.who] || 'var(--axis)'}"><div class="t">🏆 ${esc(a.title)}</div><div class="w who"><i class="dot" style="background:${COL[a.who] || 'var(--axis)'}"></i>${esc(a.who)}</div><div>${esc(a.why)}</div></div>`).join('')}</div></section>`;
+
+  /* timeline */
+  h += `<section id="timeline"><div class="kicker">Chronicle</div><h2>${esc(D.heads?.timeline || 'Seven years in brief')}</h2><ul class="tl" style="margin-top:24px">${(D.timeline || []).map(t => `<li><time>${niceDate(t.date)}</time>${esc(t.what)}</li>`).join('')}</ul></section>`;
+
+  if (D.game) h += `<section id="game"><div class="kicker">Recreation</div><h2>Ratio of Ra</h2><p class="sub">There is also a game. A first person lizard maze in the manner of Scarab of Ra (Macintosh, 1987), three levels up to the sun. The tunnel is full of the people and the types of guy this chat argues about, each with a riddle, a bet, a bad take or a swing for you, and the other three of you are in there somewhere. So are you. Pick which of the four you are. Knowing things helps.</p>
+    <div class="card gamecard"><div><h3>Play it here</h3><p class="note">It opens over this page and saves your run on this device. Keyboard or touch. About half an hour, if the Mummy lets you.</p></div><button id="gamego" type="button">Enter the tunnel</button></div><p class="foot" id="gamemsg" aria-live="polite"></p></section>`;
+  if (D.drop) h += `<section id="intake"><div class="kicker">Evidence intake</div><h2>Add to the file</h2><p class="sub">Photos, videos, screenshots, a chat export from some other thread, or just a note telling the grader he got one wrong. Drop it here and it goes to the archivist. Everything is encrypted in your browser before it leaves, nothing is published until it has been screened the same way the rest of this page was, and the next edition picks it up.</p>
+    <div class="filters" id="dzwho"><span style="align-self:center;font-size:13px;color:var(--ink2);margin-right:4px">Filed by</span>${WHO.map(w => `<button class="chip" type="button" data-who="${w}" aria-pressed="false">${w}</button>`).join('')}</div>
+    <div id="dz" role="button" tabindex="0" aria-label="Choose files to add"><b>Drop files here</b><span>or tap to choose. Up to ${D.drop.max_mb} MB each. Bigger than that, send Clay a link.</span></div><input id="dzfile" type="file" multiple hidden>
+    <textarea id="dznote" placeholder="Optional note: what is this, when was it, which grade are you disputing and why"></textarea>
+    <button id="dzgo" type="button" disabled>File it</button><ul id="dzlist" aria-live="polite"></ul></section>`;
+
+  h += `<section id="method"><div class="kicker">Fine print</div><h2>How this was made</h2><footer class="end" style="padding-top:12px"><ul>${(D.methods || []).map(m => `<li>${esc(m)}</li>`).join('')}</ul><p>Built ${esc(M.generated)}.</p></footer></section><div class="colophon">🐚 End of file · the wall behind this page is your own photos, memes and clippings, GroupMe and WhatsApp both</div></div>`;
+  $('#app').innerHTML = h; drawPreds(); if (D.drop) dzRefresh();
+  document.querySelectorAll('#app .card').forEach(c => { const t = c.querySelector('h3'), g = c.querySelector('svg[role=img]'); if (t && g) g.setAttribute('aria-label', t.textContent + '. Data table available via the Table button.'); });
+  document.querySelectorAll('#app section > .kicker').forEach((k, i) => { k.textContent = `Exhibit ${String.fromCharCode(65 + i)} · ${k.textContent}`; });
+}
+})();
+</script>
+</body>
+</html>
